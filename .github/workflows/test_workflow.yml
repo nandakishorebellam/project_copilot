@@ -16,16 +16,18 @@ jobs:
 
       - name: Display System Info
         run: |
-          echo "Running on $(uname -s) $(uname -r)"
-          echo "==================================="
-          echo "CPU: $(nproc) cores"
-          echo "==================================="
-          echo "Displaying System Info:"
-          if (Get-Command free -ErrorAction SilentlyContinue) {
-            free -h 
-          } else {
-            echo "Memory info Unavailable."
-          }
+          Write-host "Displaying System Info:"
+          # Get operating system
+          $osInfo = Get-CimInstance Win32_OperatingSystem
+          Write-Host "Running on $($osInfo.Caption) Version $($osInfo.Version)"
+          
+          # Free physical memory is returned in kilobytes
+          $freeMemoryKB = $os.FreePhysicalMemory
+          echo $freeMemoryKB
+          
+          # Convert free memory to MB
+          $freeMemoryMB = [Math]::Round($freeMemoryKB / 1024, 2)
+          echo $freeMemoryMB
 
       - name: Set up Python
         uses: actions/setup-python@v4
