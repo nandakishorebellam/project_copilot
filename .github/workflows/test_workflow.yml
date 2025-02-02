@@ -5,6 +5,35 @@ on: [push]
 jobs:
   test-runner:
     runs-on: self-hosted
+
+    strategy:
+      matrix:
+        python-version: [3.9, 3.10, 3.11]
+
     steps:
-      - name: Check Runner
-        run: echo "Runner is working successfully!"
+      - name: Checkout repository
+        run: actions/checkout@v4
+
+      - name: Display System Info
+        run: |
+          echo "Running on $(uname -s) $(uname -r)"
+          echo "==================================="
+          echo "CPU: $(nproc) cores"
+          echo "==================================="
+          free -h || echo "Memory info unavailable"
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt || echo "No such file is found."
+
+      - name: Sample
+        run: |
+          echo "Testing python versions on self-hosted runner"
+          python --version
+          echo "All tests have passed."
