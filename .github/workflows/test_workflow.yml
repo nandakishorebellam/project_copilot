@@ -12,7 +12,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        run: actions/checkout@v4
+        uses: actions/checkout@v4
 
       - name: Display System Info
         run: |
