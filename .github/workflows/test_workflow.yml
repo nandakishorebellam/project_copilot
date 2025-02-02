@@ -20,7 +20,12 @@ jobs:
           echo "==================================="
           echo "CPU: $(nproc) cores"
           echo "==================================="
-          free -h || echo "Memory info unavailable"
+          echo "Write-Host Displaying System Info:"
+          if (Get-Command free -ErrorAction SilentlyContinue) {
+            free -h 
+          } else {
+            Write-Host Memory info Unavailable.
+          }
 
       - name: Set up Python
         uses: actions/setup-python@v4
